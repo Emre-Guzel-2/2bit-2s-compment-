@@ -1,8 +1,8 @@
-// Setting the pins (kept exactly the same)
-const int pinA0 = 2; // A bit 0 (LSB) - Positive Side
-const int pinA1 = 3; // A bit 1 (MSB) - Positive Side
-const int pinB0 = 4; // B bit 0 (LSB) - Negative Side
-const int pinB1 = 5; // B bit 1 (MSB / Sign Bit) - Negative Side
+// S=setting the pins
+const int pinA0 = 2;  
+const int pinA1 = 3;  
+const int pinB0 = 4;  
+const int pinB1 = 5;  
 
 void setup() {
   pinMode(pinA0, OUTPUT);
@@ -13,31 +13,37 @@ void setup() {
   Serial.begin(9600);
 }
 
+//  2-bit binary to 2's complement decimal
+int twosCompValue(int binary2bit) {
+  if (binary2bit >= 2) {
+    return binary2bit - 4;  // 2 → -2, 3 → -1
+  }
+  return binary2bit;        // 0 → 0, 1 → 1
+}
+
 void loop() {
-  // Loop through positive values for A: 0, 1, 2, 3
+  // Lop  ALL values for A: 0, 1, 2, 3 (Decimal: 0, +1, -2, -1)
   for (int binA = 0; binA <= 3; binA++) {
     
-    // Loop ONLY through negative values for B: 2 (which is -2) and 3 (which is -1)
-    for (int binB = 2; binB <= 3; binB++) {
+    // Loop through ALL values for B: 0, 1, 2, 3 (Decimal: 0, +1, -2, -1)
+    for (int binB = 0; binB <= 3; binB++) {
       
-      // Pins A 
+      // Send signals to Pins A 
       digitalWrite(pinA0, bitRead(binA, 0)); 
       digitalWrite(pinA1, bitRead(binA, 1)); 
 
-      // Pins B 
+      // Send signals to Pins B 
       digitalWrite(pinB0, bitRead(binB, 0)); 
       digitalWrite(pinB1, bitRead(binB, 1)); 
 
-      // A is purely positive (0 to 3)
-      int valueA = binA; 
+      // Convert A and B to their 2's complement decimal values
+      int valueA = twosCompValue(binA); 
+      int valueB = twosCompValue(binB); 
       
-      // B is 2's complement negative (-2 or -1)
-      int valueB = binB - 4; 
-      
-      // Calculate the true mathematical sum
+      // Calculate the straight mathematical sum
       int totalSum = valueA + valueB;
 
-      // Print the math equation
+      // Print just the equation and the answer
       Serial.print(valueA);
       Serial.print(" + ");
       Serial.print(valueB);
