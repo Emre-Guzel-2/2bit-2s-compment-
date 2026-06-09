@@ -1,4 +1,4 @@
-// S=setting the pins
+// setting the pins
 const int pinA0 = 2;  
 const int pinA1 = 3;  
 const int pinB0 = 4;  
@@ -11,39 +11,29 @@ void setup() {
   pinMode(pinB1, OUTPUT);
 
   Serial.begin(9600);
-}
-
-//  2-bit binary to 2's complement decimal
-int twosCompValue(int binary2bit) {
-  if (binary2bit >= 2) {
-    return binary2bit - 4;  // 2 → -2, 3 → -1
-  }
-  return binary2bit;        // 0 → 0, 1 → 1
-}
+} 
 
 void loop() {
-  // Lop  ALL values for A: 0, 1, 2, 3 (Decimal: 0, +1, -2, -1)
-  for (int binA = 0; binA <= 3; binA++) {
-    
-    // Loop through ALL values for B: 0, 1, 2, 3 (Decimal: 0, +1, -2, -1)
-    for (int binB = 0; binB <= 3; binB++) {
+  // looping all values for A: 0, 1, 2, 3
+  for (int pinA = 0; pinA <= 3; pinA++) {
+    for (int pinB = 0; pinB <= 3; pinB++) {
       
-      // Send signals to Pins A 
-      digitalWrite(pinA0, bitRead(binA, 0)); 
-      digitalWrite(pinA1, bitRead(binA, 1)); 
+      // sending the signals to pins a 
+      digitalWrite(pinA0, bitRead(pinA, 0)); 
+      digitalWrite(pinA1, bitRead(pinA, 1)); 
 
-      // Send signals to Pins B 
-      digitalWrite(pinB0, bitRead(binB, 0)); 
-      digitalWrite(pinB1, bitRead(binB, 1)); 
+      // sending the signals to pins B 
+      digitalWrite(pinB0, bitRead(pinB, 0)); 
+      digitalWrite(pinB1, bitRead(pinB, 1)); 
 
-      // Convert A and B to their 2's complement decimal values
-      int valueA = twosCompValue(binA); 
-      int valueB = twosCompValue(binB); 
+      // converting A and B  2's complement decimal values
+      int valueA = twosCompValue(pinA); 
+      int valueB = twosCompValue(pinB); 
       
-      // Calculate the straight mathematical sum
+      // calculating the sum
       int totalSum = valueA + valueB;
 
-      // Print just the equation and the answer
+      // printing the equation and the answer
       Serial.print(valueA);
       Serial.print(" + ");
       Serial.print(valueB);
@@ -54,7 +44,15 @@ void loop() {
     }
   }
   
-  // Show cycle complete
+  // show cycle complete
   Serial.println("\nDone\n");
-  delay(4000); 
+  delay(4000);
+}
+
+// 2-bit binary to 2's complement decimal
+int twosCompValue(int binary2bit) {
+  if (binary2bit >= 2) {
+    return binary2bit - 4;  // 2 → -2, 3 → -1
+  }
+  return binary2bit;        // 0 → 0, 1 → 1
 }
